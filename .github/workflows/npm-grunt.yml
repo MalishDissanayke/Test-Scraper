@@ -1,9 +1,8 @@
 name: Scrape and Push Data
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -11,18 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Pull down your code
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Use Node 18 so `??=` is supported
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'    # >=16 is required for '??=' support
+          node-version: '18'
 
+      # Install NPM deps (including puppeteer-core)
       - name: Install dependencies
         run: npm install
 
-      - name: Install Chrome for Puppeteer
+      # Install Chrome for Puppeteer
+      - name: Install Chrome
         run: |
           sudo apt update
           sudo apt install -y wget gnupg2
@@ -33,26 +36,18 @@ jobs:
           sudo apt update
           sudo apt install -y google-chrome-stable
 
+      # Run your scraper
       - name: Run scraper
         run: |
           export PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
           node scraper.js
 
-      - name: Upload debug files (if any)
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: debug-info
-          path: |
-            debug.html
-            final-screenshot.png
-
-      - name: Commit & push results
-        if: success()
+      # Commit & push JSON results (only if changed)
+      - name: Commit & Push Results
         run: |
           git config --global user.name "Malish Dissanayake"
           git config --global user.email "malishadr946@gmail.com"
-          git add prematch.json live.json
+          git add prematch.json live.json debug.html final-screenshot.png
           git commit -m "Update scraped data" || echo "No changes to commit"
           git push
         env:
