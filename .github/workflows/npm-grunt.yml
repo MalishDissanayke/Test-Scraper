@@ -1,57 +1,51 @@
-name: Scrape and Push Data
+name: Scrape Data
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  scrape:
+  scrape-job:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Pull down your code
+      # Step 1: Checkout code
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      # Use Node 18 so `??=` is supported
+      # Step 2: Set up Node.js
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '14'
 
-      # Install NPM deps (including puppeteer-core)
+      # Step 3: Install system dependencies for Chromium
       - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libx11-dev \
+            libxcomposite-dev \
+            libxrandr-dev \
+            libgtk-3-0 \
+            libnss3 \
+            libasound2 \
+            libatk-bridge2.0-0 \
+            libatk1.0-0 \
+            libcups2 \
+            fonts-liberation \
+            libappindicator3-1 \
+            libnspr4 \
+            libxss1 \
+            libgdk-pixbuf2.0-0 \
+            libgdk-pixbuf2.0-dev
+
+      # Step 4: Install npm dependencies
+      - name: Install NPM dependencies
         run: npm install
 
-      # Install Chrome for Puppeteer
-      - name: Install Chrome
-        run: |
-          sudo apt update
-          sudo apt install -y wget gnupg2
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub \
-            | sudo apt-key add - 
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
-            >> /etc/apt/sources.list.d/google-chrome.list'
-          sudo apt update
-          sudo apt install -y google-chrome-stable
-
-      # Set the executable path for Puppeteer
-      - name: Set PUPPETEER_EXECUTABLE_PATH
-        run: echo "PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable" >> $GITHUB_ENV
-
-      # Run your scraper
-      - name: Run scraper
-        run: |
-          node scraper.js
-
-      # Commit & Push Results
-      - name: Commit & Push Results
-        run: |
-          git config --global user.name "Malisha Dissanayake"
-          git config --global user.email "malishadr946@gmail.com"
-          git add prematch.json live.json debug.html final-screenshot.png
-          git commit -m "Update scraped data" || echo "No changes to commit"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Step 5: Run the scraper script
+      - name: Run scraper.js
+        run: node scraper.js

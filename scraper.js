@@ -1,37 +1,48 @@
 const puppeteer = require('puppeteer-core');
 const fs = require('fs');
+const path = require('path');
+
+// Function to determine if we are in a GitHub Actions environment
+const isGithubCI = process.env.GITHUB_ACTIONS === 'true';
+
+// Set the correct executable path based on the environment
+const executablePath = isGithubCI
+  ? '/usr/bin/google-chrome-stable'  // Path to Chromium for GitHub Actions
+  : 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';  // Local machine path
 
 async function scrapeMatches() {
-  const isGithubCI = process.env.GITHUB_ACTIONS === 'true';
-
-  // Set the correct executable path based on environment
-  const executablePath = isGithubCI
-    ? process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable' // For GitHub CI
-    : 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'; // For local machine
-
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-  });
-
-  const page = await browser.newPage();
-
-  // Set a custom user-agent to avoid detection
-  await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36'
-  );
-
-  const url = 'https://1wywg.com/v3/3991/landing-betting-india?lang=en&bonus=hi&subid={sub1}&payout={amount}&p=zgpn&sub1=14t2n34f8hpef';
-
+  let browser;
+  let page;
   try {
     console.log('⏳ Navigating to page...');
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 }); // Increased timeout
+
+    // Launch Puppeteer browser
+    browser = await puppeteer.launch({
+      headless: true,  // Set to false if you want to see the browser
+      executablePath,
+      args: [
+        '--no-sandbox', 
+        '--disable-setuid-sandbox', 
+        '--disable-dev-shm-usage'
+      ]
+    });
+
+    page = await browser.newPage();
+
+    // Set a custom user-agent to avoid detection
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36'
+    );
+
+    const url = 'https://1wywg.com/v3/3991/landing-betting-india?lang=en&bonus=hi&subid={sub1}&payout={amount}&p=zgpn&sub1=14t2n34f8hpef';
+
+    // Navigate to the page and wait for .calendar-card to load
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
     console.log('✅ Page loaded. Waiting for .calendar-card...');
     
-    // Wait for .calendar-card elements to be available in the DOM (increased timeout)
-    await page.waitForSelector('.calendar-card', { timeout: 90000, visible: true });
+    // Wait for .calendar-card elements to be available in the DOM
+    await page.waitForSelector('.calendar-card', { timeout: 30000 });
 
     console.log('✅ Found .calendar-card elements');
 
@@ -53,17 +64,20 @@ async function scrapeMatches() {
       return matches;
     });
 
-    // Display the scraped prematch data
-    console.log('🔍 Prematch Data:', JSON.stringify(prematchData, null, 2));
+    // Save prematch data to file
+    fs.writeFileSync('prematch.json', JSON.stringify(prematchData, null, 2));
+    console.log('✅ Saved prematch.json');
 
-    // Click Live tab
+    // Click the 'Live' tab to switch to live data
     await page.evaluate(() => {
       const liveTab = document.querySelector('.calendar-switcher__item:nth-child(2)');
       if (liveTab) liveTab.click();
     });
 
     console.log('⏳ Waiting after switching tab...');
-    await new Promise(res => setTimeout(res, 5000));
+    
+    // Instead of waitForTimeout, use waitForSelector for the live content to load
+    await page.waitForSelector('.calendar-card', { timeout: 30000 });  // Waiting for the live tab's calendar cards
 
     // Scraping live data
     console.log('🔍 Scraping live data...');
@@ -83,23 +97,29 @@ async function scrapeMatches() {
       return matches;
     });
 
-    // Display the scraped live data
-    console.log('🔍 Live Data:', JSON.stringify(liveData, null, 2));
+    // Save live data to file
+    fs.writeFileSync('live.json', JSON.stringify(liveData, null, 2));
+    console.log('✅ Saved live.json');
 
   } catch (err) {
     console.error('❌ Scraping error:', err.message);
 
-    // Save the debug HTML content and screenshot if something goes wrong
+    // If an error occurs, capture the debug HTML and screenshot
     try {
-      fs.writeFileSync('debug.html', await page.content());
-      await page.screenshot({ path: 'final-screenshot.png' });
-      console.log('🧾 Saved final screenshot and debug.html');
+      if (page) {
+        fs.writeFileSync('debug.html', await page.content());
+        await page.screenshot({ path: 'final-screenshot.png' });
+        console.log('🧾 Saved final screenshot and debug.html');
+      }
     } catch (e) {
       console.error('⚠️ Could not save debug info:', e.message);
     }
 
   } finally {
-    await browser.close();
+    // Close the browser
+    if (browser) {
+      await browser.close();
+    }
   }
 }
 
