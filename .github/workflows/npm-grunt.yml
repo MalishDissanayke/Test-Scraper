@@ -2,15 +2,14 @@ name: Scrape Data and Push
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes
-  workflow_dispatch:       # Allow manual trigger from GitHub UI
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
 
 jobs:
   scrape-and-push-and-commit:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Node.js
@@ -30,33 +29,47 @@ jobs:
           sudo apt update
           sudo apt install -y google-chrome-stable
 
-      - name: Run the scraper and update files
+      - name: Run the scraper and update files with retries
         run: |
           export PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
-          node scraper.js
+          attempt=0
+          max_attempts=3
+          success=false
+          while [ $attempt -lt $max_attempts ]; do
+            echo "Attempt $((attempt+1)) of $max_attempts"
+            node scraper.js && success=true && break || echo "Scraper failed, retrying..."
+            ((attempt++))
+            if [ $attempt -ge $max_attempts ]; then
+              echo "Scraper failed after $max_attempts attempts."
+              exit 1
+            fi
+            sleep 10 # Wait before retrying
+          done
 
-      - name: Set up Git config
+      - name: Set up Git configuration
         run: |
-          git config --global user.name "MalishDissanayke"
-          git config --global user.email "malishadr946@gmail.com"
+          git config --global user.name "Wdevtri"
+          git config --global user.email "nikithamorningstar@gmail.com"
 
       - name: Set up GitHub authentication
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/MalishDissanayke/Test-Scraper.git
 
-      - name: Commit changes
+      - name: Commit and push changes with retries
         run: |
-          git add prematch.json live.json
-          git commit -m "Update scraped data" || echo "No changes to commit"
+          attempt=0
+          max_attempts=3
+          success=false
+          while [ $attempt -lt $max_attempts ]; do
+            echo "Attempt $((attempt+1)) of $max_attempts"
+            git add prematch.json live.json || { echo "No files to add"; exit 1; }
+            git commit -m "Update scraped data" || echo "No changes to commit"
+            git push && success=true && break || { echo "Git push failed, retrying..."; }
+            ((attempt++))
+            if [ $attempt -ge $max_attempts ]; then
+              echo "Git push failed after $max_attempts attempts."
+              exit 1
+            fi
+            sleep 10 # Wait before retrying
+          done
 
-      - name: Push changes
-        run: |
-          set -o pipefail
-          git push || echo "Push failed, checking for errors..."
-
-      - name: Check for push failure (GitHub 403 or IP block error)
-        run: |
-          if [ $? -ne 0 ]; then
-            echo "❌ Git push failed. Checking for IP block or rate-limiting issue..."
-            curl -I https://api.github.com/users/MalishDissanayke | head -n 10
-          fi
