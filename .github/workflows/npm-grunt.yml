@@ -45,7 +45,7 @@ jobs:
       # Commit & push JSON results (only if changed)
       - name: Commit & Push Results
         run: |
-          git config --global user.name "Malish Dissanayake"
+          git config --global user.name "Malisha Dissanayake"
           git config --global user.email "malishadr946@gmail.com"
           git add prematch.json live.json debug.html final-screenshot.png
           git commit -m "Update scraped data" || echo "No changes to commit"
