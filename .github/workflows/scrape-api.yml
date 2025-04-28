@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write        # grant GITHUB_TOKEN push access
+  contents: write   # allow the GITHUB_TOKEN to push changes
 
 jobs:
   scrape:
@@ -33,7 +33,7 @@ jobs:
         run: |
           git config --global user.name  "Malisha Dissanayke"
           git config --global user.email "malishadr946@gmail.com"
-          git add prematch.json live.json
+          git add prematch.json live.json debug.json
           git commit -m "Update scraped data" || echo "No changes to commit"
           git push
         env:
