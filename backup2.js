@@ -1,18 +1,19 @@
 const puppeteer = require('puppeteer-core');
 const fs = require('fs');
+const path = require('path');
 
 async function scrapeMatches() {
   const isGithubCI = process.env.GITHUB_ACTIONS === 'true';
 
   // Set the correct executable path based on environment
   const executablePath = isGithubCI
-    ? process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable' // For GitHub CI
+    ? '/usr/bin/google-chrome-stable' // For GitHub CI
     : 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'; // For local machine
 
   const browser = await puppeteer.launch({
     headless: true,
     executablePath,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
   const page = await browser.newPage();

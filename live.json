@@ -19,11 +19,11 @@
     "bets": [
       {
         "team": "Southern Crusaders",
-        "odds": "1.13"
+        "odds": "1.22"
       },
       {
         "team": "Gozo",
-        "odds": "5.5"
+        "odds": "3.95"
       }
     ]
   },
@@ -33,25 +33,11 @@
     "bets": [
       {
         "team": "Mi Cape Town Srl",
-        "odds": "1.3"
+        "odds": "1.11"
       },
       {
         "team": "Pretoria Capitals Srl",
-        "odds": "3.35"
-      }
-    ]
-  },
-  {
-    "date": "Apr 28, 03:15 PM",
-    "title": "Okara King Squad - Pir Mahal Strikers",
-    "bets": [
-      {
-        "team": "Okara King Squad",
-        "odds": "2.68"
-      },
-      {
-        "team": "Pir Mahal Strikers",
-        "odds": "1.39"
+        "odds": "5.9"
       }
     ]
   },
@@ -61,25 +47,11 @@
     "bets": [
       {
         "team": "The Aryans Cricket Academy (w)",
-        "odds": "1.42"
+        "odds": "2.29"
       },
       {
         "team": "Rani Laxmi Bai X1 (w)",
-        "odds": "2.61"
-      }
-    ]
-  },
-  {
-    "date": "Apr 28, 04:30 PM",
-    "title": "Chennai Super Kings (Axil_9095) - Mumbai Indias (Leng_0905)",
-    "bets": [
-      {
-        "team": "Chennai Super Kings (Axil_9095)",
-        "odds": "1.25"
-      },
-      {
-        "team": "Mumbai Indias (Leng_0905)",
-        "odds": "3.46"
+        "odds": "1.53"
       }
     ]
   },
@@ -89,11 +61,11 @@
     "bets": [
       {
         "team": "Screaming Eagles",
-        "odds": "2.13"
+        "odds": "2.76"
       },
       {
         "team": "Aghadi Cricket Association",
-        "odds": "1.61"
+        "odds": "1.37"
       }
     ]
   },
@@ -102,12 +74,8 @@
     "title": "India (cyber) - Pakistan (cyber)",
     "bets": [
       {
-        "team": "India (cyber)",
-        "odds": "1.13"
-      },
-      {
         "team": "Pakistan (cyber)",
-        "odds": "3.93"
+        "odds": "14.85"
       }
     ]
   },
@@ -117,11 +85,11 @@
     "bets": [
       {
         "team": "G Team Gujarawala",
-        "odds": "2.04"
+        "odds": "1.91"
       },
       {
         "team": "Sarghoda CC",
-        "odds": "1.67"
+        "odds": "1.76"
       }
     ]
   },
@@ -131,7 +99,7 @@
     "bets": [
       {
         "team": "Sunrisers Hyderabad (cyber)",
-        "odds": "9.31"
+        "odds": "14.85"
       }
     ]
   },
@@ -141,11 +109,11 @@
     "bets": [
       {
         "team": "Bangladesh (VR)",
-        "odds": "2.25"
+        "odds": "2.72"
       },
       {
         "team": "Draw",
-        "odds": "23.86"
+        "odds": "23.82"
       }
     ]
   },
@@ -155,7 +123,7 @@
     "bets": [
       {
         "team": "Delhi (CS)",
-        "odds": "1.81"
+        "odds": "1.56"
       },
       {
         "team": "Draw",
@@ -165,29 +133,15 @@
   },
   {
     "date": "Apr 28, 05:30 PM",
-    "title": "Lucky Girls (Women) - Golden Bunch (Women)",
-    "bets": [
-      {
-        "team": "Lucky Girls (w)",
-        "odds": "1.63"
-      },
-      {
-        "team": "Draw",
-        "odds": "24.51"
-      }
-    ]
-  },
-  {
-    "date": "Apr 28, 05:30 PM",
     "title": "Wizards Indoor - Green Sharks",
     "bets": [
       {
         "team": "Wizards Indoor",
-        "odds": "1.8"
+        "odds": "3.13"
       },
       {
         "team": "Draw",
-        "odds": "24.53"
+        "odds": "24.46"
       }
     ]
   },
@@ -197,11 +151,11 @@
     "bets": [
       {
         "team": "Australia (cyber)",
-        "odds": "1.7"
+        "odds": "1.68"
       },
       {
         "team": "South Africa (cyber)",
-        "odds": "1.92"
+        "odds": "1.94"
       }
     ]
   },
@@ -211,11 +165,11 @@
     "bets": [
       {
         "team": "J Warriors",
-        "odds": "2.34"
+        "odds": "3.25"
       },
       {
         "team": "Shimla Swingers",
-        "odds": "1.51"
+        "odds": "1.28"
       }
     ]
   },
@@ -225,11 +179,53 @@
     "bets": [
       {
         "team": "Kolkata Knight Riders (VR)",
-        "odds": "1.7"
+        "odds": "1.51"
       },
       {
         "team": "Draw",
-        "odds": "23.88"
+        "odds": "23.86"
+      }
+    ]
+  },
+  {
+    "date": "Apr 28, 06:00 PM",
+    "title": "Fast Hornets (Women) - Lady Legends (Women)",
+    "bets": [
+      {
+        "team": "Fast Hornets (w)",
+        "odds": "1.99"
+      },
+      {
+        "team": "Draw",
+        "odds": "24.57"
+      }
+    ]
+  },
+  {
+    "date": "Apr 28, 06:05 PM",
+    "title": "Mumbai Indians (cyber) - Punjab Kings (cyber)",
+    "bets": [
+      {
+        "team": "Mumbai Indians (cyber)",
+        "odds": "2.53"
+      },
+      {
+        "team": "Punjab Kings (cyber)",
+        "odds": "1.4"
+      }
+    ]
+  },
+  {
+    "date": "Apr 28, 06:00 PM",
+    "title": "India Blue (Scalpel) - India Red (Carlo)",
+    "bets": [
+      {
+        "team": "India Blue (Scalpel)",
+        "odds": "2.77"
+      },
+      {
+        "team": "India Red (Carlo)",
+        "odds": "1.37"
       }
     ]
   }
