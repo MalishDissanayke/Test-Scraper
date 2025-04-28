@@ -1,4 +1,4 @@
-name: Scrape & Push (Cheerio)
+name: Scrape and Push Data
 
 on:
   schedule:
@@ -10,25 +10,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Pull down your code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js (>=16)
+      # Use Node 18 so `??=` is supported
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
+      # Install NPM deps (including puppeteer-core)
       - name: Install dependencies
-        run: npm install axios cheerio
+        run: npm install
 
-      - name: Run Cheerio scraper
-        run: node scraper-cheerio.js
+      # Install Chrome for Puppeteer
+      - name: Install Chrome
+        run: |
+          sudo apt update
+          sudo apt install -y wget gnupg2
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub \
+            | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
+            >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt update
+          sudo apt install -y google-chrome-stable
 
-      - name: Commit & push results
+      # Run your scraper
+      - name: Run scraper
+        run: |
+          export PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
+          node scraper.js
+
+      # Commit & push JSON results (only if changed)
+      - name: Commit & Push Results
         run: |
           git config --global user.name "Malisha Dissanayake"
           git config --global user.email "malishadr946@gmail.com"
-          git add prematch.json live.json
+          git add prematch.json live.json debug.html final-screenshot.png
           git commit -m "Update scraped data" || echo "No changes to commit"
           git push
         env:
