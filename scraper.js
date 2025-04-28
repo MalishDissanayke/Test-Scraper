@@ -13,7 +13,7 @@ async function scrapeMatches() {
   const browser = await puppeteer.launch({
     headless: true,
     executablePath,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--window-size=1280x1024'],
   });
 
   const page = await browser.newPage();
@@ -30,11 +30,12 @@ async function scrapeMatches() {
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
     console.log('✅ Page loaded. Waiting for .calendar-card...');
-
-    // Wait for .calendar-card elements to be available in the DOM
-    await page.waitForFunction(() => {
-      return document.querySelectorAll('.calendar-card').length > 0;
-    }, { timeout: 30000 });
+    
+    // Increase timeout and adjust waiting logic for GitHub Actions
+    await page.waitForFunction(
+      () => document.querySelectorAll('.calendar-card').length > 0, 
+      { timeout: 180000 } // Increase wait time
+    );
 
     console.log('✅ Found .calendar-card elements');
 
