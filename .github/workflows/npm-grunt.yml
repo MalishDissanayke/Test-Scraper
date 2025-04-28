@@ -27,7 +27,7 @@ jobs:
           node scraper.js  # This will execute your scraper script
 
       - name: Upload JSON output files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Updated to v3
         with:
           name: json-files
           path: |
