@@ -26,14 +26,12 @@ async function scrapeMatches() {
 
   try {
     console.log('⏳ Navigating to page...');
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 }); // Increased timeout
 
     console.log('✅ Page loaded. Waiting for .calendar-card...');
     
-    // Wait for .calendar-card elements to be available in the DOM
-    await page.waitForFunction(() => {
-      return document.querySelectorAll('.calendar-card').length > 0;
-    }, { timeout: 30000 });
+    // Wait for .calendar-card elements to be available in the DOM (increased timeout)
+    await page.waitForSelector('.calendar-card', { timeout: 90000, visible: true });
 
     console.log('✅ Found .calendar-card elements');
 
