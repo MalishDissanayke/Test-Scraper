@@ -2,25 +2,30 @@ name: Scrape Data and Push
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *'  # Run every 5 minutes
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   scrape-and-push-and-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Running on Ubuntu in GitHub CI
+
     steps:
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      - name: Install Google Chrome
+      # Step 4: Install Google Chrome and necessary dependencies
+      - name: Install dependencies for Puppeteer
         run: |
           sudo apt update
           sudo apt install -y wget gnupg2
@@ -29,47 +34,20 @@ jobs:
           sudo apt update
           sudo apt install -y google-chrome-stable
 
-      - name: Run the scraper and update files with retries
+      # Step 5: Run the scraper
+      - name: Run the scraper and update files
         run: |
           export PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
-          attempt=0
-          max_attempts=3
-          success=false
-          while [ $attempt -lt $max_attempts ]; do
-            echo "Attempt $((attempt+1)) of $max_attempts"
-            node scraper.js && success=true && break || echo "Scraper failed, retrying..."
-            ((attempt++))
-            if [ $attempt -ge $max_attempts ]; then
-              echo "Scraper failed after $max_attempts attempts."
-              exit 1
-            fi
-            sleep 10 # Wait before retrying
-          done
+          node scraper.js
 
-      - name: Set up Git configuration
-        run: |
-          git config --global user.name "Wdevtri"
-          git config --global user.email "nikithamorningstar@gmail.com"
-
+      # Step 6: Set up GitHub authentication (using the default GITHUB_TOKEN)
       - name: Set up GitHub authentication
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/MalishDissanayke/Test-Scraper.git
 
-      - name: Commit and push changes with retries
+      # Step 7: Commit and push changes
+      - name: Commit and push changes
         run: |
-          attempt=0
-          max_attempts=3
-          success=false
-          while [ $attempt -lt $max_attempts ]; do
-            echo "Attempt $((attempt+1)) of $max_attempts"
-            git add prematch.json live.json || { echo "No files to add"; exit 1; }
-            git commit -m "Update scraped data" || echo "No changes to commit"
-            git push && success=true && break || { echo "Git push failed, retrying..."; }
-            ((attempt++))
-            if [ $attempt -ge $max_attempts ]; then
-              echo "Git push failed after $max_attempts attempts."
-              exit 1
-            fi
-            sleep 10 # Wait before retrying
-          done
-
+          git add prematch.json live.json
+          git commit -m "Update scraped data" || echo "No changes to commit"
+          git push
