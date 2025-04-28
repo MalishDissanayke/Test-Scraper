@@ -34,7 +34,7 @@ async function scrapeMatches() {
     // Increase timeout and adjust waiting logic for GitHub Actions
     await page.waitForFunction(
       () => document.querySelectorAll('.calendar-card').length > 0, 
-      { timeout: 180000 } // Increase wait time
+      { timeout: 30000 } // Increase wait time
     );
 
     console.log('✅ Found .calendar-card elements');
