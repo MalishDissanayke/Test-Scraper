@@ -1,61 +1,35 @@
-name: Puppeteer Scraper
+name: Scrape Data and Save to Files
 
 on:
   push:
     branches:
-      - main
+      - main  # Adjust this to the branch you want to trigger the workflow on
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  scrape:
+    runs-on: ubuntu-latest  # Ubuntu environment for GitHub Actions
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libasound2 \
-            libatk-bridge2.0-0 \
-            libatk1.0-0 \
-            libcups2 \
-            libgdk-pixbuf2.0-0 \
-            libnspr4 \
-            libnss3 \
-            libx11-xcb1 \
-            libxcomposite1 \
-            libxdamage1 \
-            libxrandr2 \
-            libgbm1 \
-            libappindicator3-1 \
-            libasound2 \
-            libatspi2.0-0 \
-            libcurl4 \
-            libdbus-1-3 \
-            libgdk-pixbuf2.0-0 \
-            libicu67 \
-            libpangocairo-1.0-0 \
-            libpci3 \
-            libwayland-client0 \
-            libxss1 \
-            libxtst6 \
-            fonts-liberation \
-            libappindicator3-1 \
-            libnss3 \
-            xdg-utils \
-            lsb-release \
-            sudo \
-            wget \
-            ca-certificates
+          node-version: '16'  # Ensure you are using a Node.js version compatible with Puppeteer
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install puppeteer
 
-      - name: Run the scraper
-        run: node scraper.js
+      - name: Run scraper.js
+        run: |
+          node scraper.js  # This will execute your scraper script
+
+      - name: Upload JSON output files
+        uses: actions/upload-artifact@v2
+        with:
+          name: json-files
+          path: |
+            prematch.json
+            live.json
