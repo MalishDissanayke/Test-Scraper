@@ -53,8 +53,8 @@ async function scrapeMatches() {
       return matches;
     });
 
-    fs.writeFileSync('prematch.json', JSON.stringify(prematchData, null, 2));
-    console.log('✅ Saved prematch.json');
+    // Display the scraped prematch data
+    console.log('🔍 Prematch Data:', JSON.stringify(prematchData, null, 2));
 
     // Click Live tab
     await page.evaluate(() => {
@@ -83,8 +83,8 @@ async function scrapeMatches() {
       return matches;
     });
 
-    fs.writeFileSync('live.json', JSON.stringify(liveData, null, 2));
-    console.log('✅ Saved live.json');
+    // Display the scraped live data
+    console.log('🔍 Live Data:', JSON.stringify(liveData, null, 2));
 
   } catch (err) {
     console.error('❌ Scraping error:', err.message);
