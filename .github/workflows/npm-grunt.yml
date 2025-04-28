@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install puppeteer
+          npm install puppeteer  # Install puppeteer dependency
 
       - name: Run scraper.js
         run: |

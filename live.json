@@ -29,11 +29,11 @@
     "bets": [
       {
         "team": "G Team Gujarawala",
-        "odds": "1.73"
+        "odds": "1.64"
       },
       {
         "team": "Sarghoda CC",
-        "odds": "1.95"
+        "odds": "2.08"
       }
     ]
   },
@@ -48,16 +48,26 @@
     ]
   },
   {
+    "date": "Apr 28, 05:30 PM",
+    "title": "J Warriors - Shimla Swingers",
+    "bets": [
+      {
+        "team": "Shimla Swingers",
+        "odds": "10.75"
+      }
+    ]
+  },
+  {
     "date": "Apr 28, 06:05 PM",
     "title": "Mumbai Indians (cyber) - Punjab Kings (cyber)",
     "bets": [
       {
         "team": "Mumbai Indians (cyber)",
-        "odds": "1.72"
+        "odds": "1.74"
       },
       {
         "team": "Punjab Kings (cyber)",
-        "odds": "1.89"
+        "odds": "1.87"
       }
     ]
   },
@@ -81,11 +91,11 @@
     "bets": [
       {
         "team": "India (VR)",
-        "odds": "1.53"
+        "odds": "1.51"
       },
       {
         "team": "Draw",
-        "odds": "23.87"
+        "odds": "23.86"
       }
     ]
   },
@@ -95,11 +105,11 @@
     "bets": [
       {
         "team": "Gujarat Titans (Axil_9095)",
-        "odds": "1.95"
+        "odds": "2.13"
       },
       {
         "team": "Kolkata Knight Riders (Leng_0905)",
-        "odds": "1.73"
+        "odds": "1.61"
       }
     ]
   },
@@ -119,11 +129,11 @@
     "bets": [
       {
         "team": "Smashers",
-        "odds": "2.73"
+        "odds": "3.09"
       },
       {
         "team": "Draw",
-        "odds": "24.56"
+        "odds": "24.52"
       }
     ]
   },
@@ -147,11 +157,11 @@
     "bets": [
       {
         "team": "India Red (Endra)",
-        "odds": "8.35"
+        "odds": "7.38"
       },
       {
         "team": "India Blue (Scalpel)",
-        "odds": "1.03"
+        "odds": "1.05"
       }
     ]
   },
