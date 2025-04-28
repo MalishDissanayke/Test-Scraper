@@ -1,0 +1,49 @@
+name: Scrape Data and Push
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'  # Every 5 minutes
+  workflow_dispatch:       # Allow manual trigger
+
+jobs:
+  scrape-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Google Chrome
+      run: |
+        sudo apt update
+        sudo apt install -y wget gnupg2
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+        sudo apt update
+        sudo apt install -y google-chrome-stable
+
+    - name: Run the scraper
+      run: |
+        export PUPPETEER_EXECUTABLE_PATH="/usr/bin/google-chrome-stable"
+        node scraper.js
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "Malish Dissanayake"
+        git config --global user.email "your-email@example.com"
+
+    - name: Commit and Push Changes
+      run: |
+        git add prematch.json live.json
+        git commit -m "Update scraped data" || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
