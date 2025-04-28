@@ -10,31 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code from the repository
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # Step 2: Set up Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'
 
-    # Step 3: Install dependencies
     - name: Install dependencies
       run: npm install
 
-    # Step 4: Run the scraper script
     - name: Run scraper
       run: node scraper.js
 
-    # Step 5: Commit and push the results to the repository
-    - name: Commit and push results
-      run: |
-        git config --global user.name "Malish Dissanayake"
-        git config --global user.email "malishadr946@gmail.com"
-        git add prematch.json live.json debug.html final-screenshot.png
-        git commit -m "Update scraped data"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload debug files as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: debug-files
+        path: |
+          debug.html
+          final-screenshot.png
