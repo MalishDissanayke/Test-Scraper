@@ -34,7 +34,7 @@ async function scrapeMatches() {
     // Wait for .calendar-card elements to be available in the DOM
     await page.waitForFunction(() => {
       return document.querySelectorAll('.calendar-card').length > 0;
-    }, { timeout: 30000 });
+    }, { timeout: 130000 });
 
     console.log('✅ Found .calendar-card elements');
 
