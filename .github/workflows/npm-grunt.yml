@@ -2,8 +2,8 @@ name: Scrape Data and Push
 
 on:
   schedule:
-    - cron: '*/5 * * * *'   # Every 5 minutes
-  workflow_dispatch:        # Allow manual trigger from GitHub UI
+    - cron: '*/5 * * * *'  # Every 5 minutes
+  workflow_dispatch:       # Allow manual trigger from GitHub UI
 
 jobs:
   scrape-and-push-and-commit:
@@ -44,8 +44,19 @@ jobs:
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/MalishDissanayke/Test-Scraper.git
 
-      - name: Commit and push changes
+      - name: Commit changes
         run: |
           git add prematch.json live.json
           git commit -m "Update scraped data" || echo "No changes to commit"
-          git push
+
+      - name: Push changes
+        run: |
+          set -o pipefail
+          git push || echo "Push failed, checking for errors..."
+
+      - name: Check for push failure (GitHub 403 or IP block error)
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "❌ Git push failed. Checking for IP block or rate-limiting issue..."
+            curl -I https://api.github.com/users/MalishDissanayke | head -n 10
+          fi
